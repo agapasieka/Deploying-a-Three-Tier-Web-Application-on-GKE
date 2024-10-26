@@ -1,0 +1,8 @@
+.terraform
+.terraform.lock.hcl
+.terraform.tfstate
+.terraform.tfstate.lock.info
+.DS_Store
+tfplan
+provider.tf.bak
+.venv
