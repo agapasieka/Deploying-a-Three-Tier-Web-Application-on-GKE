@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      serviceAccountName: gkesqlsa
+      containers:
+        - name: web
+          image: gcr.io/cloud-marketplace/google/wordpress:6.1
+          ports:
+            - containerPort: 80
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: 127.0.0.1:3306
+            - name: WORDPRESS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sql-credentials
+                  key: username
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sql-credentials
+                  key: password
+            # Integration with the Node.js API backend
+            - name: API_URL
+              value: "http://nodejs-api-service:8080" # Internal service URL for Node.js API
+        - name: cloudsql-proxy
+          image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0
+          args: 
+           - "--structured-logs"
+           - "--port=3306"
+           -  "<INSTANCE_CONNECTION_NAME>" 
+          securityContext:
+            runAsNonRoot: true 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-service
+  labels:
+    app: wordpress
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: wordpress
+  type: LoadBalancer
