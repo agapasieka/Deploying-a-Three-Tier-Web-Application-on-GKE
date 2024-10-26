@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-api
+  labels:
+    app: nodejs-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-api
+  template:
+    metadata:
+      labels:
+        app: nodejs-api
+    spec:
+      containers:
+      - name: nodejs-api
+        image: node:14
+        command: ["node", "app.js"]
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_HOST
+          value: "127.0.0.1"
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: sql-credentials
+              key: db_user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sql-credentials
+              key: db_password
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: sql-credentials
+              key: db_name
+        volumeMounts:
+        - name: cloudsql-proxy-volume
+          mountPath: /cloudsql
+      volumes:
+      - name: cloudsql-proxy-volume
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-api-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: nodejs-api
