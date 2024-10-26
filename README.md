@@ -23,7 +23,7 @@ This architecture provides a three-tier solution for deploying Wordpress applica
 
 * Circle Ci workflow running jobs like terraform fmt, terraform plan and terraform apply to automatically deploy infrastructure using terraform ensuring code consistency and validation. 
 
-![img](circleci-config.png)
+![img](workflows.png)
 
 ## Application deployment using declarative manifest files
 
