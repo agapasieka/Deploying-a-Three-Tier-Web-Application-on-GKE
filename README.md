@@ -46,5 +46,6 @@ This architecture provides a three-tier solution for deploying Wordpress applica
 * Enable Cloud Logging to capture application and system logs from GKE
 * Configure Readiness and Liveness Probes to ensure WordPress is ready to serve traffic before it’s exposed
 * Multi-region deployments to enhance the current setup further
+* Use Hub and Spoke Network topology providing more robust network segmentation and isolation
 
 
