@@ -29,7 +29,7 @@ This architecture provides a three-tier solution for deploying Wordpress applica
 
 * Wordpress Deployment object that deploys a demo Wordpress application container with the SQL Proxy agent as a sidecar container  and Service object that exposes the WordPress application externally
 * The cloudsql-proxy sidecar container is configured to point to the Cloud SQL instance
-* The database username and password are passed to the Wordpress container as secret keys, and Workload Identity is configured
+* The database username and password are passed to the Wordpress container as environment variables using Kubernetes Secrets, and Workload Identity is configured
 * Nodejs API Deployment object that connects between Wordpress and CLoud SQL and Service object as ClusterIP to expose the application withing the Cluster 
 
 
